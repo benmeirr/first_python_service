@@ -13,7 +13,6 @@ router = APIRouter(
 
 orders = {}  # order_id --> Order
 
-
 # Full CRUD for Order entity:
 @router.get("/{order_id}", response_model=Order, status_code=status.HTTP_200_OK)
 def get_order_by_id(order_id: int) -> Order:
@@ -50,7 +49,7 @@ def delete_order(order_id: int):
         pass
 
 
-@router.get("/customer/name", response_model=List[Order])
+@router.get("/customer/name/", response_model=List[Order])
 def get_orders_by_customer(customer_name: Optional[str] = Query(None)) -> List[Order]:
     order_results = []
     for order in orders.values():
