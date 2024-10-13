@@ -28,7 +28,7 @@ async def get_by_status(customer_status: CustomerStatus) -> List[Customer]:
     return [Customer(**result) for result in results]
 
 
-async def create_customer(customer: Customer):
+async def create_customer(customer: Customer) -> int:
     query = f"""
         INSERT INTO {TABLE_NAME} (first_name, last_name, email, status)
         VALUES(:first_name, :last_name, :email, :status)
@@ -36,7 +36,10 @@ async def create_customer(customer: Customer):
     values = {"first_name": customer.first_name, "last_name": customer.last_name,
               "email": customer.email, "status": customer.status.name}
 
-    await database.execute(query, values=values)
+    async with database.transaction():
+        await database.execute(query, values=values)
+        last_record_id = await database.fetch_one("SELECT LAST_INSERT_ID()")
+    return last_record_id[0]
 
 
 async def update_customer(customer_id: int, customer: Customer):

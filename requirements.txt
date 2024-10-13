@@ -5,3 +5,4 @@ pydantic==1.10.7
 databases==0.7.0
 SQLAlchemy==1.4.47
 aiomysql
+httpx==0.23.0

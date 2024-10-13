@@ -11,3 +11,4 @@ class Customer(BaseModel):
     last_name: str
     email: str
     status: CustomerStatus
+
