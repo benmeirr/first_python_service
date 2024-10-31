@@ -22,7 +22,7 @@ async def get_customer_order(customer_order_id: int) -> Optional[CustomerOrder]:
 @router.post("/", response_model=CustomerOrderResponse)
 async def create_customer_order(customer_order_request: CustomerOrderRequest) -> CustomerOrderResponse:
     try:
-        await customer_order_service.create_customer_order(customer_order_request)
+        return await customer_order_service.create_customer_order(customer_order_request)
     except Exception as e:
         error_detail = str(e)
         raise HTTPException(status_code=404, detail=error_detail)
