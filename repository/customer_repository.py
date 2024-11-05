@@ -1,19 +1,29 @@
+import json
 from typing import Optional, List
 
 from model.customer import Customer
 from model.customer_status import CustomerStatus
+from repository import cache_repository
 from repository.database import database
 
 TABLE_NAME = "customer"
 
 
 async def get_by_id(customer_id: int) -> Optional[Customer]:
-    query = f"SELECT * FROM {TABLE_NAME} WHERE id=:customer_id"
-    result = await database.fetch_one(query, values={"customer_id": customer_id})
-    if result:
-        return Customer(**result)
+    if cache_repository.is_key_exists(str(customer_id)):
+        string_customer = cache_repository.get_cache_entity(str(customer_id))
+        customer_data = json.loads(string_customer)
+        return Customer(**customer_data)
     else:
-        return None
+        query = f"SELECT * FROM {TABLE_NAME} WHERE id=:customer_id"
+        result = await database.fetch_one(query, values={"customer_id": customer_id})
+        if result:
+            customer = Customer(**result)
+            string_customer = customer.json()
+            cache_repository.create_cache_entity(str(customer_id), string_customer)
+            return customer
+        else:
+            return None
 
 
 async def get_all() -> List[Customer]:
@@ -39,7 +49,11 @@ async def create_customer(customer: Customer) -> int:
     async with database.transaction():
         await database.execute(query, values=values)
         last_record_id = await database.fetch_one("SELECT LAST_INSERT_ID()")
-    return last_record_id[0]
+
+    customer_id = last_record_id[0]
+    customer.id = customer_id
+    cache_repository.create_cache_entity(str(customer_id), customer.json())
+    return customer_id
 
 
 async def update_customer(customer_id: int, customer: Customer):
