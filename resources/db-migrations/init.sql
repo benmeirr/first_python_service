@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS customer;
 DROP TABLE IF EXISTS customer_order;
 DROP TABLE IF EXISTS customer_favorite_item;
+DROP TABLE IF EXISTS users
 
 CREATE TABLE customer(
     id INT(11) NOT NULL AUTO_INCREMENT,
@@ -27,5 +28,15 @@ CREATE TABLE customer_favorite_item (
     item_id INT NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    hashed_password VARCHAR(255) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE NOT NULL
+);
+
 
 

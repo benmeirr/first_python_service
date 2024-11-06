@@ -7,3 +7,8 @@ SQLAlchemy==1.4.47
 aiomysql
 httpx==0.23.0
 redis
+passlib==1.7.4
+bcrypt==4.0.1
+python-jose==3.3.0
+python-multipart==0.0.6
+streamlit==1.34.0
