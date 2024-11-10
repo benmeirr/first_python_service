@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from model.user import User
 from model.user_request import UserRequest
@@ -35,3 +35,9 @@ async def create_user(user: UserRequest, hashed_password: str):
     values = {**user_dict, "hashed_password": hashed_password, "is_active": True}
 
     await database.execute(query, values)
+
+
+async def get_users() -> List[User]:
+    query = f"SELECT * FROM {TABLE_NAME} WHERE is_active=:is_active"
+    results = await database.fetch_all(query, values={"is_active": True})
+    return [User(**result) for result in results]

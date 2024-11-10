@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from passlib.context import CryptContext
 
@@ -47,3 +47,14 @@ async def get_user_by_id(user_id: int) -> Optional[UserResponse]:
 async def validate_unique_username(username: str) -> bool:
     existing_user = await user_repository.get_by_username(username)
     return existing_user is None
+
+
+async def get_users() -> List[UserResponse]:
+    users = await user_repository.get_users()
+    return [UserResponse(
+        id=user.id,
+        username=user.username,
+        first_name=user.first_name,
+        last_name=user.last_name
+    ) for user in users]
+

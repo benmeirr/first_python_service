@@ -1,5 +1,4 @@
 from datetime import timedelta, datetime
-from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from exceptions.security_exceptions import token_exception
 from config.config import Config
